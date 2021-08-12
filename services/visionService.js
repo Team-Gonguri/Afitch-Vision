@@ -24,10 +24,11 @@ exports.tryModel = async(imgList) => {
         img.src = path.join(__dirname,`../images/${imgName}`)
         const input = tf.browser.fromPixels(canvas)
         const pose = await net.estimateSinglePose(input,imageScaleFactor,flipHorizontal,outputStride)
-        pose.keypoints.filter((keypoint,idx) => idx >= 5).forEach(keypoint => indexOutput[`${keypoint.part}`] ={x:keypoint.position.x,y:keypoint.position.y})
+        pose.keypoints.forEach((keypoint,idx) => {
+            if(idx >= 5) 
+                indexOutput[`${keypoint.part}`] ={x:keypoint.position.x,y:keypoint.position.y}
+        })
         output.push(indexOutput);
-        for await (const keypoint of pose.keypoints) 
-            indexOutput[`${keypoint.part}`] ={x:keypoint.position.x,y:keypoint.position.y}
     }
     return output
 }
