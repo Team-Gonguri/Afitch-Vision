@@ -5,15 +5,16 @@ const uuid = require("../services/uuidUtil")
 const vision = require("../services/visionService")
 
 /* GET home page. */
-router.get('/', async (req, res, next) => {
+router.post('/', async (req, res, next) => {
   /**
    * 요청 식별을 위한 identifier
    */
+  console.log(req.body)
   const identifier = await uuid.uuidv4()
   /**
    * 초 단위로 동영상 img로 자름
    */
-  await cutFrames(req.query.url,identifier)
+  await cutFrames(req.body.url,identifier)
   /**
    * input으로 넣을 imgList
    */
