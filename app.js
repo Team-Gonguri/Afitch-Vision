@@ -8,7 +8,10 @@ const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
 const ffmpeg = require('fluent-ffmpeg');
 ffmpeg.setFfmpegPath(ffmpegPath);
 
-app.use(express.json());
+app.use(express.json({
+  limit : "50mb"
+}
+));
 app.use(express.urlencoded({ extended: false }));
 
 app.use('/', indexRouter);

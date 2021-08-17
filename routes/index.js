@@ -1,34 +1,21 @@
 var express = require('express');
 var router = express.Router();
-const {cutFrames,getImages,deleteImages} = require("../services/imageService")
-const uuid = require("../services/uuidUtil")
 const vision = require("../services/visionService")
 
-/* GET home page. */
-router.post('/', async (req, res, next) => {
-  /**
-   * 요청 식별을 위한 identifier
-   */
-  console.log(req.body)
-  const identifier = await uuid.uuidv4()
-  /**
-   * 초 단위로 동영상 img로 자름
-   */
-  await cutFrames(req.body.url,identifier)
-  /**
-   * input으로 넣을 imgList
-   */
-  const fileList = await getImages(identifier)
-  /**
-   * model 돌린 결과 값
-   */
-  const output = await vision.tryModel(fileList)
-  /**
-   * 만들어진 이미지 삭제
-   */
-  await deleteImages(fileList)
-  
+/* Get Vector */
+router.get('/vector', async (req, res, next) => {
+  const url = req.query.url
+  const output = await vision.getVector(url)
   return res.json(output)
 });
+
+/*Get Similarity*/
+router.get('/similarity',async (req,res,next) =>{
+    const trainer = req.query.trainer
+    const user = req.query.user
+    const output = await vision.getSimilarity(trainer,user)
+    return res.json(output)
+})
+
 
 module.exports = router;
