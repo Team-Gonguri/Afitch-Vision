@@ -10,9 +10,9 @@ router.get('/vector', async (req, res, next) => {
 });
 
 /*Get Similarity*/
-router.get('/similarity',async (req,res,next) =>{
-    const trainer = req.query.trainer
-    const user = req.query.user
+router.post('/similarity',async (req,res,next) =>{
+    const trainer = req.body.data
+    const user = req.query.url
     const output = await vision.getSimilarity(trainer,user)
     return res.json(output)
 })

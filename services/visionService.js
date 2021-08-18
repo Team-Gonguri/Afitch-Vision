@@ -11,12 +11,11 @@ const flipHorizontal = false;
 const uuid = require("../services/uuidUtil")
 
 exports.getSimilarity = async(trainer, user) =>{
-    const trainerOutput = await this.getVector(trainer)
-    const userOutput = await this.getVector(user)
-    let sum=0,length = trainerOutput.length > userOutput.length? userOutput.length:trainerOutput.length
+    const output = await this.getVector(user)
+    let sum=0,length = trainer.length > output.length? trainer.length:output.length
     
     for (i=0;i<length;i++){
-        const output = poseSimilarity(trainerOutput[i],userOutput[i],{
+        const similarity = poseSimilarity(trainer[i],output[i],{
             mode:'multiply',
             scores:{leftEye:0,
                     nose:0,
@@ -26,8 +25,8 @@ exports.getSimilarity = async(trainer, user) =>{
     
             }
         })
-        console.log(output)
-        sum += output
+        console.log(similarity)
+        sum += similarity
     }
     return sum/length
 }
