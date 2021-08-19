@@ -12,7 +12,7 @@ const uuid = require("../services/uuidUtil")
 
 exports.getSimilarity = async(trainer, user) =>{
     const output = await this.getVector(user)
-    let sum=0,length = trainer.length > output.length? trainer.length:output.length
+    let sum1=0,sum2=0,length = trainer.length > output.length? trainer.length:output.length
     
     for (i=0;i<length;i++){
         const similarity = poseSimilarity(trainer[i],output[i],{
@@ -22,13 +22,16 @@ exports.getSimilarity = async(trainer, user) =>{
                     rightEye:0,
                     leftEar:0,
                     rightEar:0
-    
             }
         })
-        console.log(similarity)
-        sum += similarity
+        const value = Math.log2(Math.pow(similarity+1,100))
+        console.log(value)
+        sum1 += value
+        sum2 += similarity
     }
-    return sum/length
+    console.log("not processed == "+(sum2/length))
+    console.log("processed == "+(sum1/(length)))
+    return sum1/length
 }
 
 exports.getVector = async(url) => {    
