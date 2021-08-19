@@ -4,34 +4,23 @@ const {createCanvas,Image} = require('canvas');
 const path = require("path");
 const {cutFrames,getImages,deleteImages} = require("../services/imageService")
 const { poseSimilarity} = require('posenet-similarity')
+const uuid = require("../services/uuidUtil")
 
 const imageScaleFactor = 0.5;
 const outputStride = 16;
 const flipHorizontal = false;
-const uuid = require("../services/uuidUtil")
+const  exclude = ["nose","leftEye","rightEye","leftEar","rightEar"]
 
 exports.getSimilarity = async(trainer, user) =>{
     const output = await this.getVector(user)
-    let sum1=0,sum2=0,length = trainer.length > output.length? trainer.length:output.length
+    let sum=0,length = trainer.length > output.length?output.length:trainer.length
     
     for (i=0;i<length;i++){
-        const similarity = poseSimilarity(trainer[i],output[i],{
-            mode:'multiply',
-            scores:{leftEye:0,
-                    nose:0,
-                    rightEye:0,
-                    leftEar:0,
-                    rightEar:0
-            }
-        })
-        const value = Math.log2(Math.pow(similarity+1,100))
-        console.log(value)
-        sum1 += value
-        sum2 += similarity
+        const similarity = poseSimilarity(trainer[i],output[i],{strategy:"cosineSimilarity"})
+        //const value = Math.log2(Math.pow(similarity+1,100))
+        sum += similarity
     }
-    console.log("not processed == "+(sum2/length))
-    console.log("processed == "+(sum1/(length)))
-    return sum1/length
+    return sum/length
 }
 
 exports.getVector = async(url) => {    
@@ -65,6 +54,7 @@ exports.getVector = async(url) => {
         img.src = path.join(__dirname,`../images/${fileName}`)
         const input = tf.browser.fromPixels(canvas)
         const pose = await net.estimateSinglePose(input,imageScaleFactor,flipHorizontal,outputStride)
+        pose.keypoints = pose.keypoints.filter(it => !exclude.includes(it.part))
         output.push(pose)
     }
     await deleteImages(fileList)

@@ -6,7 +6,7 @@ exports.cutFrames = async(url,identifier) => {
 await extractFrames({
         input: url,
         output: path.join(__dirname,"..","images",`${identifier}-%d.png`),
-        fps: 2
+        fps: 3
     })
 }
 
