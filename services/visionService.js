@@ -8,7 +8,7 @@ const PNG = require("png.js")
 const uuid = require("../services/uuidUtil")
 
 const  exclude = ["nose","leftEye","rightEye","leftEar","rightEar"]
-const width =1920, height=1080
+const width =800, height=600
 
 exports.getSimilarity = async(trainer, user) =>{
     const output = await this.getVector(user)
@@ -20,7 +20,6 @@ exports.getSimilarity = async(trainer, user) =>{
                    
         sum += value
     }
-    console.log(100-sum/(length*10))
     return 100-sum/(length*10)
 }
 
@@ -44,7 +43,7 @@ exports.getVector = async(url) => {
     const net = await posnet.load({
         architecture: 'MobileNetV1',
         outputStride: 16,
-        inputResolution: { width: 400, height: 300 },
+        inputResolution: { width: width, height: height },
         multiplier: 0.75});   
 
         const canvas = createCanvas(width,height)
