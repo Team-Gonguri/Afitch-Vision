@@ -16,9 +16,7 @@
     "fs": "0.0.1-security",
     "node-gyp": "^8.1.0",
     "path": "^0.12.7",
-    "png.js": "^0.2.1",
-    "posenet-similarity": "^0.4.8",
-    "yarn": "^1.22.11"
+    "posenet-similarity": "^0.4.8"
   },
   "devDependencies": {},
   "scripts": {

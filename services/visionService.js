@@ -1,14 +1,13 @@
 const tf = require('@tensorflow/tfjs-node');
 const posnet = require('@tensorflow-models/posenet');
-const {createCanvas,Image, Canvas} = require('canvas');
+const {createCanvas,Image} = require('canvas');
 const path = require("path");
 const {cutFrames,getImages,deleteImages} = require("../services/imageService")
 const { poseSimilarity} = require('posenet-similarity')
-const PNG = require("png.js")
 const uuid = require("../services/uuidUtil")
 
 const  exclude = ["nose","leftEye","rightEye","leftEar","rightEar"]
-const width =800, height=600
+const width = 640, height = 480
 
 exports.getSimilarity = async(trainer, user) =>{
     const output = await this.getVector(user)
@@ -43,7 +42,7 @@ exports.getVector = async(url) => {
     const net = await posnet.load({
         architecture: 'MobileNetV1',
         outputStride: 16,
-        inputResolution: { width: width, height: height },
+        inputResolution: { width: width*2, height: height*2 },
         multiplier: 0.75});   
 
         const canvas = createCanvas(width,height)
